@@ -11,11 +11,36 @@ def showImage(src, usingOpenCV):
         cv2.waitKey(0)
         cv2.destroyAllWindows()
     else:
-        src = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
+        # src = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
         plt.imshow(src)
         plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
         plt.show()
 
+def averaging(src, rad=1):
+
+    if rad <= 0:
+        dst = src.copy()
+        print("カーネルサイズが不適当なため、処理しません")
+        return dst
+    
+    # カーネルサイズ
+    kernelSize = rad*2 + 1
+
+    # 入力画像サイズ
+    imgH, imgW = src.shape[0], src.shape[1]
+
+    # 出力画像配列
+    dst = np.zeros((imgH, imgW))
+
+    # フィルタカーネル
+    kernel = np.full((kernelSize,kernelSize), 1/(kernelSize*kernelSize))
+
+    # 畳込み
+    for y in range(rad, imgH-rad):
+        for x in range(rad, imgW-rad):
+            dst[y][x] = np.sum(src[y-rad:y+rad+1, x-rad:x+rad+1] * kernel)
+
+    return dst
 
 def main():
 
@@ -23,13 +48,15 @@ def main():
     filename = "./data/IMG_0164.JPG"
 
     # ファイルを開く
-    src = cv2.imread(filename)
+    # src = cv2.imread(filename)
+    src = cv2.imread(filename, 0)
 
     # 処理する
+    dst = averaging(src)
 
-    # OpenCV で表示する
-    usingOpenCV = False
-    showImage(src, usingOpenCV)
+    # OpenCV or plt で表示する
+    usingOpenCV = True #False
+    showImage(dst, usingOpenCV)
 
     # 保存する
 
