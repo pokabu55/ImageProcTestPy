@@ -22,3 +22,5 @@ while True:
 
 window.close()
 
+pushのお試しように記述
+
