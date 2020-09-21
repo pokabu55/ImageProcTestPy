@@ -4,10 +4,10 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-def showImage(src, usingOpenCV):
+def showImage(src, usingOpenCV, windowName):
 
     if usingOpenCV == True:
-        cv2.imshow("image", src)
+        cv2.imshow(windowName, src)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
     else:
@@ -15,6 +15,18 @@ def showImage(src, usingOpenCV):
         plt.imshow(src)
         plt.xticks([]), plt.yticks([])  # to hide tick values on X and Y axis
         plt.show()
+
+def show2Images(src1, src1Name, src2, src2Name, usingOpenCV):
+
+    if usingOpenCV == True:
+        cv2.imshow(src1Name, src1)
+        cv2.imshow(src2Name, src2)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+    else:
+        return False
+
+    return True
 
 def averaging(src, rad=1):
 
@@ -30,7 +42,8 @@ def averaging(src, rad=1):
     imgH, imgW = src.shape[0], src.shape[1]
 
     # 出力画像配列
-    dst = np.zeros((imgH, imgW))
+    # dst = np.zeros((imgH, imgW))
+    dst = src.copy()
 
     # フィルタカーネル
     kernel = np.full((kernelSize,kernelSize), 1/(kernelSize*kernelSize))
@@ -56,7 +69,7 @@ def main():
 
     # OpenCV or plt で表示する
     usingOpenCV = True #False
-    showImage(dst, usingOpenCV)
+    show2Images(src, "src", dst, "dst", usingOpenCV)
 
     # 保存する
 
